@@ -1,45 +1,23 @@
-import MsgArea from '../components/MsgArea'
-import Button from '../components/Button'
-import Chat from '../components/Chat'
-import Message from '../components/Message'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from '../components/Login'
+import CreateRoom from '../components/CreateRoom'
+import Home from '../components/Home'
+import RoomHome from '../components/RoomHome'
+
 import './App.css'
 
-const msgArr = [
-  {
-    msg : 'hi vikas',
-    userId : 'asd234lkjj232lk43lk2',
-    roomId : '12339023'
-  },
-  {
-    msg : 'hi bro',
-    userId : 'asd234lkjj232lk43lk3',
-    roomId : '12339023'
-  },
-  {
-    msg : 'hi bro',
-    userId : 'asd234lkjj232lk43lk3',
-    roomId : '12339023'
-  },
-  {
-    msg : 'hi bro, how are you doing. lets go to party tonight. are you up?',
-    userId : 'asd234lkjj232lk43lk3',
-    roomId : '12339023'
-  }
-]
-
 function App() {
-    return <div className="open-sans-400">
-      <Chat className='w-11/12 border-2 border-black rounded-[8px] mx-auto mt-24 p-4'>
-          { msgArr &&
-            msgArr.map((item) => {
-              return <Message className='ml-2' message={item.msg}/>
-            })
-          }
-          <div className="flex p-2 justify-center">
-            <MsgArea className='w-3/4'/>
-            <Button name="Send" className='ml-2 w-1/4'/>     
-          </div>
-      </Chat>
-    </div>;
+    return(
+      <>
+        <BrowserRouter>
+        <Routes>
+          <Route index element={<Login/>}/>
+          <Route path='createroom' element={<CreateRoom/>}/>
+          <Route path='chat' element={<Home/>}/>
+          <Route path='rooms' element={<RoomHome />}/>
+        </Routes>
+        </BrowserRouter>
+      </>
+    )
 }
 export default App;
