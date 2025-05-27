@@ -139,28 +139,40 @@ app.post("/api/room", (req, res) => {
 }
 */
 wss.on("connection", function (socket) {
-    const isUserExist = users.find((item) => item.userid === req.headers.userid!.toString());
     
-    if(isUserExist){
-        const isUserAlreadyConnected = userSocket.find((item) => item.userid === req.headers.userid!.toString() && item.roomid === req.headers.roomid!.toString());
-        if(!isUserAlreadyConnected){
-            userSocket.push({
-                userid : req.headers.userid!.toString(),
-                roomid : req.headers.roomid!.toString(),
-                socket : socket
-            })
-        }
-    }
-    else{
-        return;
-    }
-
     socket.on("message", (e) => {
         const reqData = JSON.parse(e.toString());
-
-        //user want to join the group
         
-        const userInRoom = userSocket.filter(item => item.roomid === req.headers.roomid!.toString())
-        userInRoom.forEach(u => u.socket.send(e.toString()));
+        // user want to join the group
+        if(reqData.type === "join"){
+            const isUserAlreadyConnected = userSocket.find(item => item.userid === reqData.payload.userid && item.roomid ===  reqData.payload.roomid);
+            if(!isUserAlreadyConnected){
+                userSocket.push(
+                    {
+                        userid :  reqData.payload.userid,
+                        roomid :  reqData.payload.roomid,
+                        socket : socket
+                    }
+                )
+            }
+
+            // adding as a member
+            const roomIndex = rooms.findIndex(item => item.roomid === reqData.payload.roomid);
+            if(roomIndex !== -1){
+                const isUserAleadyMember = rooms[roomIndex].members.find(m => m === reqData.payload.userid);
+                if(!isUserAleadyMember){
+                    rooms[roomIndex].members.push(reqData.payload.userid);
+                }
+            }
+        }
+
+        // user want to send a msg to group or to another person
+        if(reqData.type === "chat"){
+            // send the msg in respective group
+            const userInRoom = userSocket.filter(item => item.roomid === reqData.payload.roomid)
+            userInRoom.forEach(u => u.socket.send(reqData.payload.message));
+        }
+
+
     });
 });
