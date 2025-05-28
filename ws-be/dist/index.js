@@ -7,6 +7,7 @@ const ws_1 = require("ws");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const wss = new ws_1.WebSocketServer({ port: 8000 });
+const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -70,9 +71,9 @@ app.post("/api/user", (req, res) => {
         res.status(400).json({ message: "User ID and username are required." });
         return;
     }
-    const existingUser = users.find(user => user.userid === userid);
+    const existingUser = users.find(user => user.username === username);
     if (existingUser) {
-        res.status(400).json({ message: "User already exists." });
+        res.status(200).json({ message: "User already exists." });
         return;
     }
     const newUser = { userid, username };
@@ -100,6 +101,9 @@ app.post("/api/room", (req, res) => {
     };
     rooms.push(newRoom);
     res.status(201).json(newRoom);
+});
+app.listen(PORT, () => {
+    console.log(`listening on port ${PORT}`);
 });
 /*
 {
