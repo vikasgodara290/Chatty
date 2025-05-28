@@ -2,11 +2,13 @@ import { useRef } from 'react'
 import Button from '../components/Button'
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios'
-
+import { useNavigate } from 'react-router-dom';
 const BACKEND_URL = 'http://localhost:3000';
 
 export default function Login() {
     const usernameRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate();
+
     const handleOnLogin = () => {
         const username = usernameRef.current;
         const userid = uuidv4();
@@ -17,6 +19,9 @@ export default function Login() {
             username: username?.value
         }).then((response) => {
             console.log(response.data);
+            localStorage.setItem("username", response.data.username);
+            localStorage.setItem("userid", response.data.userid);
+            navigate("/rooms")
             return response.data;
         }).catch((error) => {
             console.error("There was an error creating the user!", error);

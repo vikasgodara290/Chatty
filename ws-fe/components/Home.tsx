@@ -2,6 +2,7 @@ import MsgArea from '../components/MsgArea'
 import Button from '../components/Button'
 import Chat from '../components/Chat'
 import Message from '../components/Message'
+import { useEffect } from 'react'
 
 const msgArr = [
   {
@@ -27,6 +28,8 @@ const msgArr = [
 ]
 
 export default function Home() {
+
+
     return <div className="open-sans-400">
       <Chat className='w-11/12 border-2 border-black rounded-[8px] mx-auto mt-24 p-4'>
           { msgArr &&

@@ -73,7 +73,7 @@ app.post("/api/user", (req, res) => {
     }
     const existingUser = users.find(user => user.username === username);
     if (existingUser) {
-        res.status(200).json({ message: "User already exists." });
+        res.status(200).json(existingUser);
         return;
     }
     const newUser = { userid, username };
@@ -101,6 +101,10 @@ app.post("/api/room", (req, res) => {
     };
     rooms.push(newRoom);
     res.status(201).json(newRoom);
+});
+// get rooms
+app.get("/api/room", (req, res) => {
+    res.status(201).json(rooms);
 });
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
